@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  # Laravel PHP Service
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: budgetbuddy_app
+    ports:
+      - "8001:80"
+    volumes:
+      - .:/var/www/html
+    networks:
+      - budgetbuddy_network
+    depends_on:
+      - db
+
+  # PostgreSQL Database Service
+  db:
+    image: postgres:13
+    container_name: budgetbuddy_db
+    environment:
+      POSTGRES_DB: budgetbuddy
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - budgetbuddy_network
+
+  # phpMyAdmin Service (optional for managing PostgreSQL databases)
+  pgadmin:
+    container_name: pgadmin4_container_api
+    image: dpage/pgadmin4
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: gangdb@admin.com
+      PGADMIN_DEFAULT_PASSWORD: root_password
+    ports:
+      - "5052:80"
+
+# Define volumes for persistent storage
+volumes:
+  postgres_data:
+
+# Define networks for communication between containers
+networks:
+  budgetbuddy_network:
+    driver: bridge
