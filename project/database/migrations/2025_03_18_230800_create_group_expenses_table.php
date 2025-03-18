@@ -15,6 +15,12 @@ class CreateGroupExpensesTable extends Migration
     {
         Schema::create('group_expenses', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('group_id')->constrained()->onDelete('cascade');
+            $table->string('title');
+            $table->text('description')->nullable();
+            $table->decimal('amount', 10, 2);
+            $table->date('expense_date');
+            $table->enum('split_type', ['equal', 'custom'])->default('equal');
             $table->timestamps();
         });
     }

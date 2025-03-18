@@ -12,12 +12,16 @@ class CreateGroupsTable extends Migration
      * @return void
      */
     public function up()
-    {
-        Schema::create('groups', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
-        });
-    }
+{
+    Schema::create('groups', function (Blueprint $table) {
+        $table->id();
+        $table->string('name');
+        $table->text('description')->nullable();
+        $table->string('currency')->default('EUR');
+        $table->foreignId('creator_id')->constrained('users')->onDelete('cascade');
+        $table->timestamps();
+    });
+}
 
     /**
      * Reverse the migrations.

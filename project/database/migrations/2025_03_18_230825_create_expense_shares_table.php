@@ -15,6 +15,11 @@ class CreateExpenseSharesTable extends Migration
     {
         Schema::create('expense_shares', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('group_expense_id')->constrained()->onDelete('cascade');
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->decimal('paid_amount', 10, 2)->default(0); 
+            $table->decimal('share_amount', 10, 2); 
+            $table->decimal('percentage', 5, 2)->nullable(); 
             $table->timestamps();
         });
     }
