@@ -1,9 +1,14 @@
 <?php
 
+use App\Http\Controllers\API\AlertController;
+use App\Http\Controllers\API\AnomalyController;
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\BalanceController;
+use App\Http\Controllers\API\BudgetController;
 use App\Http\Controllers\API\GroupExpenseController;
 use App\Http\Controllers\API\PaymentController;
+use App\Http\Controllers\API\RecurringExpenseController;
+use App\Http\Controllers\API\ReportController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -43,4 +48,26 @@ Route::middleware('auth:sanctum')->group(function () {
     
     Route::post('groups/{id}/settle', [PaymentController::class, 'store']);
     Route::get('groups/{id}/history', [PaymentController::class, 'history']);
+});
+
+
+// routes/api.php
+
+// ... Routes existantes (auth, expenses, tags, groups)
+
+// Routes pour les budgets et alertes (protégées par auth:sanctum)
+Route::middleware('auth:sanctum')->group(function () {
+    Route::apiResource('budgets', BudgetController::class);
+    
+    Route::get('alerts', [AlertController::class, 'index']);
+    Route::post('alerts/{id}/read', [AlertController::class, 'markAsRead']);
+    Route::post('alerts/read-all', [AlertController::class, 'markAllAsRead']);
+    
+    Route::apiResource('recurring-expenses', RecurringExpenseController::class)
+         ->except(['show', 'update']);
+    
+    Route::get('expenses/anomalies', [AnomalyController::class, 'index']);
+    
+    Route::get('reports/summary', [ReportController::class, 'summary']);
+    Route::get('reports/custom', [ReportController::class, 'custom']);
 });
