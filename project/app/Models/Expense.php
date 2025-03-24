@@ -16,8 +16,20 @@ class Expense extends Model
         'description',
         'amount',
         'expense_date',
-        'user_id'
+        'user_id',
+        'category',
+        'recurring_expense_id'
     ];
+
+    public function recurringExpense(): BelongsTo
+{
+    return $this->belongsTo(RecurringExpense::class);
+}
+
+public function alerts()
+{
+    return $this->hasMany(Alert::class);
+}
 
     protected $casts = [
         'expense_date' => 'date',
