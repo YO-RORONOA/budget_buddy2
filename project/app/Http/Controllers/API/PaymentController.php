@@ -27,14 +27,12 @@ class PaymentController extends Controller
             'notes' => 'nullable|string'
         ]);
 
-        // Vérifier que les deux utilisateurs sont membres du groupe
         if (!$group->members->contains($request->from_user_id) || !$group->members->contains($request->to_user_id)) {
             return response()->json([
                 'message' => 'Both users must be members of the group'
             ], 422);
         }
 
-        // Seul l'utilisateur qui effectue le paiement ou celui qui le reçoit peut l'enregistrer
         if (Auth::id() != $request->from_user_id && Auth::id() != $request->to_user_id) {
             return response()->json([
                 'message' => 'You can only record payments that involve you'
@@ -60,7 +58,6 @@ class PaymentController extends Controller
     {
         $group = Group::findOrFail($groupId);
 
-        // Vérifier si l'utilisateur est membre du groupe
         if (!$group->members->contains(Auth::id())) {
             return response()->json([
                 'message' => 'You are not a member of this group'

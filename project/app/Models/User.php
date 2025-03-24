@@ -59,4 +59,30 @@ class User extends Authenticatable
     {
         return $this->hasMany(Tag::class);
     }
+
+    public function createdGroups()
+{
+    return $this->hasMany(Group::class, 'creator_id');
+}
+
+public function groups()
+{
+    return $this->belongsToMany(Group::class, 'group_members')
+                ->withTimestamps();
+}
+
+public function expenseShares()
+{
+    return $this->hasMany(ExpenseShare::class);
+}
+
+public function paymentsFrom()
+{
+    return $this->hasMany(Payment::class, 'from_user_id');
+}
+
+public function paymentsTo()
+{
+    return $this->hasMany(Payment::class, 'to_user_id');
+}
 }

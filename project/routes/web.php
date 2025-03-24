@@ -1,6 +1,9 @@
 <?php
 
 use App\Http\Controllers\API\AuthController;
+use App\Http\Controllers\API\BalanceController;
+use App\Http\Controllers\API\GroupExpenseController;
+use App\Http\Controllers\API\PaymentController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -20,10 +23,24 @@ Route::get('/', function () {
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
-// Routes protégées (authentifiées)
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/user', [AuthController::class, 'user']);
     
-    // Nous ajouterons les autres routes protégées ici plus tard
+});
+
+
+
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::apiResource('groups', \App\Http\Controllers\API\GroupController::class);
+    
+    Route::get('groups/{id}/expenses', [GroupExpenseController::class, 'index']);
+    Route::post('groups/{id}/expenses', [GroupExpenseController::class, 'store']);
+    Route::delete('groups/{id}/expenses/{expenseId}', [GroupExpenseController::class, 'destroy']);
+    
+    Route::get('groups/{id}/balances', [BalanceController::class, 'index']);
+    
+    Route::post('groups/{id}/settle', [PaymentController::class, 'store']);
+    Route::get('groups/{id}/history', [PaymentController::class, 'history']);
 });
